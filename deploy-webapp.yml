@@ -1,0 +1,12 @@
+---
+
+  - name: Reserve ec2 instances in aws cloud
+    hosts: localhost
+    connection: local
+    gather_facts: False
+    vars_files:
+    - group_vars/global_aws.yml
+    roles:
+      - { role: sec_group }
+      - { role: ec2, ec2_inst_name: Server1 }
+      - { role: ec2, ec2_inst_name: Server2 }

@@ -1,0 +1,19 @@
+---
+  - name: create security group
+    ec2_group:
+      name: my-sec-grp
+      description: default security group to allow ssh, http, https access
+      region: "{{ ec2_region }}"
+      rules:
+        - proto: tcp
+          from_port: 22
+          to_port: 22
+          cidr_ip: 0.0.0.0/0
+        - proto: tcp
+          from_port: 80
+          to_port: 80
+          cidr_ip: 0.0.0.0/0
+        - proto: tcp
+          from_port: 443
+          to_port: 443
+          cidr_ip: 0.0.0.0/0
