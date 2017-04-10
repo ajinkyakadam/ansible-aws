@@ -13,3 +13,6 @@ This respository contains code for deploying a simple web app.
 - Deploy an ELB using ec2_elb_lb
  
 
+#### Author:
+Ajinkya Kadam
+
