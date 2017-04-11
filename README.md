@@ -28,14 +28,15 @@ To Deploy, execute the following
 ansible-playbook -i /etc/ansible/hosts deploy-webapp.yml
 ```
 
-### Done:
-- Deploying ec2, security groups using ansible cloud modules
+### Work Done:
+- role to create ec2 instances
+- role to create a security group
 
 
 ### TODO:
 - Install the required LAMP stack on the nodes
-- Deploy a node as Nagios Server to monitor the resources
-- Deploy an ELB using ec2_elb_lb
+- role to deploy `nagios` on nagios sever instance and `nrpe and nagios plugins` on the nodes to monitor
+- role to create an ELB using `ec2_elb_lb`
 
 
 #### Author:
