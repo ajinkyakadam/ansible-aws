@@ -2,10 +2,11 @@
 This respository contains code for deploying a simple web app.
 
 ### Pre-Requisites:
-Here we assume you have the following
+Here we assume you have the following on your local machine
  - boto
  - python2.7
  - keys placed in `~/.boto`
+ - ansible
 
 ### Instructions to Run
 
