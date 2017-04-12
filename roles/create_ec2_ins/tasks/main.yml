@@ -11,6 +11,7 @@
       group: "{{ ec2_group }}"
       instance_tags:
         Name: "{{ ec2_inst_name }}"
+        Environment: "Testing"
       volumes:
         - device_name: /dev/xvda
           volume_type: "{{ ec2_vol_type }}"
