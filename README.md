@@ -1,6 +1,6 @@
 ## Using Ansible and AWS to create a CI CD pipeline for Static Website
 
-<img src="StaticSite.png">
+<img src="StaticSite.png" height=400px>
 
 ### Pre-Requisites:
 Here we assume you have the following on your local machine
@@ -31,14 +31,18 @@ ansible-playbook -i /etc/ansible/hosts deploy-webapp.yml
 ```
 
 ### Work Done:
-- role to create ec2 instances
-- role to create a security group
+  - deployed a cloudformation stack to provision  the following :
+      - EC2 Instance (CICD Server)
+      - S3 Bucket which holds contents of the static website
+      - CloudFront Distribution
+  - ansible role to install git on CICD Server
 
 
 ### TODO:
-- Install the required LAMP stack on the nodes
-- role to deploy `nagios` on nagios sever instance and `nrpe and nagios plugins` on the nodes to monitor
-- role to create an ELB using `ec2_elb_lb`
+  - Role to install jekyll (static site generator) and its dependencies
+  - Role to install Jenkins
+  - Role to install github plugin for Jenkins
+  - Role to install aws-cli on CICD Server
 
 
 #### Author:
