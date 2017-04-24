@@ -1,5 +1,6 @@
-## Using Ansible to Deploy a webapp (In Progress)
-This respository contains code for deploying a simple web app.
+## Using Ansible and AWS to create a CI CD pipeline for Static Website
+
+<img src="StaticSite.png">
 
 ### Pre-Requisites:
 Here we assume you have the following on your local machine
