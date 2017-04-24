@@ -6,7 +6,22 @@
     gather_facts: False
     vars_files:
     - group_vars/all.yml
+    tasks:
+      - name: Create a Static WebSite Stack
+        cloudformation:
+          stack_name: "{{ stack_name }}"
+          state: "present"
+          region: "{{ region_name }}"
+          disable_rollback: false
+          template: "files/staticsite.yaml"
+        register: cf_ss
+
+      - name: Add CICD server to inventory
+        add_host: hostname={{cf_ss.stack_outputs.InstancePublicIP}} groupname=jenkins
+
+  - name: Install Jenkins, jekyll, git, aws-cli, github-jenkins plugin on CICD server
+    hosts: jenkins
+    remote_user: ec2-user
+    gather_facts: False
     roles:
-      - { role: sec_group }
-      - { role: create_ec2_ins, ec2_inst_name: Server1 }
-      - { role: create_ec2_ins, ec2_inst_name: Server2 }
+          - git

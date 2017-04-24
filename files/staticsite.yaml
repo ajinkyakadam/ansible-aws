@@ -1,0 +1,93 @@
+---
+  AWSTemplateFormatVersion: 2010-09-09
+  Description: 'This template is used as an example which deploys a static website
+                using CICD. The stack includes creating a S3 bucket, and ec2 instance
+                and a cloudfront distribution'
+  Parameters:
+    KeyName:
+      Description: Using an existing keypair
+      Type: AWS::EC2::KeyPair::KeyName
+      Default: yourkey
+      AllowedValues: ['yourkey']
+      ConstraintDescription: Must be name of an existing keypair
+
+  Resources:
+    S3Bucket:
+      Type: AWS::S3::Bucket
+      Properties:
+        AccessControl: PublicRead
+        BucketName: test-jekyll-staticsite-22april
+        WebsiteConfiguration:
+          IndexDocument: index.html
+          ErrorDocument: error.html
+
+    CICDServer:
+      Type: "AWS::EC2::Instance"
+      Properties:
+        UserData: !Base64
+          Fn::Join:
+            - ''
+            - [IPAddress=, !Ref 'IPAddress']
+        ImageId: ami-c58c1dd3
+        InstanceType: t2.micro
+        SecurityGroups: [!Ref EC2SecGrp]
+        KeyName: !Ref 'KeyName'
+        Tags:
+          - Key: Name
+            Value: CICD Server
+        Tenancy: default
+
+    StaticSiteCDN:
+        Type: AWS::CloudFront::Distribution
+        Properties:
+          DistributionConfig:
+            Origins:
+              - DomainName: !GetAtt [S3Bucket, DomainName]
+                Id: S3Origin
+                CustomOriginConfig:
+                  OriginProtocolPolicy: http-only
+            DefaultCacheBehavior:
+              TargetOriginId: S3Origin
+              ForwardedValues:
+                Cookies:
+                  Forward: none
+                QueryString: False
+              ViewerProtocolPolicy: allow-all
+            DefaultRootObject: index.html
+            Enabled: true
+            PriceClass: PriceClass_100
+            ViewerCertificate:
+              CloudFrontDefaultCertificate: true
+
+    EC2SecGrp:
+      Type: "AWS::EC2::SecurityGroup"
+      Properties:
+        GroupDescription: "Enable SSH via acess"
+        SecurityGroupIngress:
+          - IpProtocol: "tcp"
+            FromPort: "22"
+            ToPort: "22"
+            CidrIp: "0.0.0.0/0"
+        Tags:
+          - Key: Name
+            Value: EC2-Sec-Grp
+
+    IPAddress:
+      Type: AWS::EC2::EIP
+
+    IPAssoc:
+      Type: AWS::EC2::EIPAssociation
+      Properties:
+        InstanceId: !Ref 'CICDServer'
+        EIP: !Ref 'IPAddress'
+
+  Outputs:
+    WebsiteURL:
+      Value:  !GetAtt [S3Bucket, WebsiteURL]
+      Description: URL of site using s3 bucket
+    S3BucketURL:
+      Value: !Join ['', ['https://', !GetAtt [S3Bucket, DomainName]]]
+      Description: DNS Name of the provisioned Bucket
+    InstancePublicIP:
+      Value: !Ref 'IPAddress'
+      Description: PublicIp of CICD Server
